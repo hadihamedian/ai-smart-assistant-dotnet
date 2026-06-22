@@ -9,26 +9,22 @@ public class AskQuestionHandler : IRequestHandler<AskQuestionCommand, AskQuestio
 {
     private readonly IVectorStore _vectorStore;
     private readonly IAIService _aiService;
-    private readonly IDocumentRepository _documentRepository;
+    private readonly IChatSessionRepository _chatSessionRepository;
 
-    public AskQuestionHandler(IVectorStore vectorStore, IAIService aiService, IDocumentRepository documentRepository)
+    public AskQuestionHandler(IVectorStore vectorStore, IAIService aiService, IChatSessionRepository chatSessionRepository)
     {
         _vectorStore = vectorStore;
         _aiService = aiService;
-        _documentRepository = documentRepository;
+        _chatSessionRepository = chatSessionRepository;
     }
 
     public async Task<AskQuestionResponse> Handle(AskQuestionCommand request, CancellationToken cancellationToken)
     {
-        // 1. Search Qdrant for top 3 similar chunks
         var similarChunks = await _vectorStore.SearchSimilarChunksAsync(request.Question, 3, cancellationToken);
-
-        // 2. Generate Answer via Semantic Kernel (OpenAI/Ollama)
         var answer = await _aiService.GenerateAnswerAsync(request.Question, similarChunks, cancellationToken);
-
-        // 3. Save Chat Session
+        
         var chatSession = ChatSession.Create(request.DocumentId, request.Question, answer);
-        await _documentRepository.AddChatSessionAsync(chatSession, cancellationToken);
+        await _chatSessionRepository.AddAsync(chatSession, cancellationToken);
 
         return new AskQuestionResponse(answer, similarChunks, chatSession.Id);
     }

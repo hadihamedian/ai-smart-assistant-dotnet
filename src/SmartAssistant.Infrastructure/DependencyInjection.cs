@@ -2,8 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Qdrant.Client;
+using SmartAssistant.Application.Common.Interfaces;
 using SmartAssistant.Domain.Interfaces;
 using SmartAssistant.Infrastructure.AI;
+using SmartAssistant.Infrastructure.Parsers;
 using SmartAssistant.Infrastructure.Repositories;
 using SmartAssistant.Infrastructure.VectorStore;
 
@@ -62,6 +64,9 @@ public static class DependencyInjection
         // استخراج و ثبت صریح EmbeddingGenerator از کرنل به DI دات‌نت
         services.AddSingleton(sp => kernel.GetRequiredService<Microsoft.Extensions.AI.IEmbeddingGenerator<string, Microsoft.Extensions.AI.Embedding<float>>>());
 
+        services.AddSingleton<IChatSessionRepository, ChatSessionRepository>();
+        services.AddSingleton<IDocumentParser, PdfDocumentParser>();
+        
         return services;
     }
 }
