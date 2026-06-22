@@ -20,4 +20,9 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\SmartAssistant.Application\SmartAssistant.Application.csproj" />
+      <ProjectReference Include="..\..\src\SmartAssistant.Domain\SmartAssistant.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
