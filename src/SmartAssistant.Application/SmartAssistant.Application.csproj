@@ -7,7 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Common\Interfaces\" />
+      <PackageReference Include="MediatR" Version="14.1.0" />
+      <PackageReference Include="PdfPig" Version="0.1.14" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SmartAssistant.Domain\SmartAssistant.Domain.csproj" />
     </ItemGroup>
 
 </Project>
