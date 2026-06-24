@@ -18,7 +18,7 @@ public class UploadDocumentHandlerTests
     {
         var handler = new UploadDocumentHandler(_documentRepositoryMock.Object, _vectorStoreMock.Object, _documentParserMock.Object);
         var command = new UploadDocumentCommand("test.pdf", Stream.Null);
-        var parsedText = new string('A', 2500); // برای تولید حداقل دو چانک
+        var parsedText = new string('A', 2500);
         
         _documentParserMock.Setup(p => p.ParseAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(parsedText);

@@ -4,12 +4,12 @@ using SmartAssistant.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. اضافه کردن سرویس CORS برای اجازه دادن به درخواست‌های کلاینت
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:3000") // پورت‌های احتمالی React/Vite
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -26,7 +26,6 @@ var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// 2. فعال‌سازی میدل‌ور CORS (حتما باید قبل از UseAuthorization و MapControllers باشد)
 app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())

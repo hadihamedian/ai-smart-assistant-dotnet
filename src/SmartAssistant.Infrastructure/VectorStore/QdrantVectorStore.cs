@@ -22,11 +22,9 @@ public class QdrantVectorStore : IVectorStore
         var chunkArray = chunks.ToArray();
         if (chunkArray.Length == 0) return;
 
-        // دریافت دایمنشن وکتور به صورت داینامیک از اولین چانک
         var sampleEmbedding = await _embeddingGenerator.GenerateAsync(chunkArray[0], cancellationToken: cancellationToken);
         var vectorSize = (ulong)sampleEmbedding.Vector.Length;
 
-        // بررسی و ساخت کالکشن در صورت عدم وجود
         if (!await _client.CollectionExistsAsync(CollectionName, cancellationToken: cancellationToken))
         {
             await _client.CreateCollectionAsync(
@@ -42,7 +40,7 @@ public class QdrantVectorStore : IVectorStore
             var result = await _embeddingGenerator.GenerateAsync(chunk, cancellationToken: cancellationToken);
             var point = new PointStruct
             {
-                Id = Guid.NewGuid(), // استفاده از Guid یکتا برای جلوگیری از Overwrite
+                Id = Guid.NewGuid(),
                 Vectors = result.Vector.ToArray(),
                 Payload = { ["text"] = chunk, ["documentId"] = documentId.ToString() }
             };
@@ -57,7 +55,7 @@ public class QdrantVectorStore : IVectorStore
         var result = await _embeddingGenerator.GenerateAsync(query, cancellationToken: cancellationToken);
         var searchResults = await _client.SearchAsync(
             CollectionName,
-            result.Vector.ToArray(), // [0] حذف شد
+            result.Vector.ToArray(),
             limit: (ulong)topK,
             cancellationToken: cancellationToken);
 

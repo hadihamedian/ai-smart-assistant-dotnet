@@ -22,8 +22,7 @@ public static class DependencyInjection
         services.AddSingleton(new QdrantClient(qdrantHost, qdrantPort));
 
         services.AddScoped<IVectorStore, QdrantVectorStore>();
-        // ارجاع صریح به اینترفیس برنامه برای جلوگیری از تداخل
-        services.AddScoped<SmartAssistant.Application.Common.Interfaces.IAIService, SemanticKernelService>();
+        services.AddScoped<IAIService, SemanticKernelService>();
 
         var provider = configuration["AI:Provider"];
         var builder = Kernel.CreateBuilder();
@@ -61,7 +60,6 @@ public static class DependencyInjection
         var kernel = builder.Build();
         services.AddSingleton(kernel);
         
-        // استخراج و ثبت صریح EmbeddingGenerator از کرنل به DI دات‌نت
         services.AddSingleton(sp => kernel.GetRequiredService<Microsoft.Extensions.AI.IEmbeddingGenerator<string, Microsoft.Extensions.AI.Embedding<float>>>());
 
         services.AddSingleton<IChatSessionRepository, ChatSessionRepository>();
